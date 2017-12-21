@@ -9,8 +9,6 @@
 ::file https://drive.google.com/uc?export=download&id=1qzFu41CgQjSzzysg7w-_dcF6z4GSBpsr https://goo.gl/3oNgFV
 ::file.bat https://drive.google.com/uc?export=download&id=1ol1CZBaK_NjVGW1aou_9encaUMkRcT6J https://goo.gl/xRaB5D
 ::t.txt https://raw.githubusercontent.com/Ingeniouss/Poke-Batch/master/t.zip https://goo.gl/dCFFJu
-::folderbox https://drive.google.com/uc?export=download&id=1WkSAgQknk1L4Hiq4z17pAATfesP2nMOA https://goo.gl/bDYnVU
-
 
 msg * no sounds because they're all messed up.
 
@@ -49,9 +47,6 @@ if not exist %pdest%\wget.exe (
 @echo $client.DownloadFile^("https://goo.gl/KTKBa2","%pdest%\wget.exe"^) >> get.ps1
 PowerShell.exe -NoProfile -ExecutionPolicy Bypass -Command "& '%pdest%\get.ps1'"
 )
-
-
-
 Echo 7za.exe...
 if not exist %pdest%\7za.exe (
 call %pdest%\wget.exe -O 7za.exe "https://goo.gl/NpyCXt" -q
@@ -103,7 +98,7 @@ ping localhost -n 4 >nul
 
 :actualstart
 ::start /min %userprofile%\pokebatch\pid.bat 
-::start /min %pdest%\pokemonsounds\background.vbs
+start /min %pdest%\pokemonsounds\background.vbs
 
 color 1F
 :name
@@ -124,7 +119,7 @@ cls
 echo So your name is "%playername%"?
 echo _._._._.y/n._._._._
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
-::::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 %pdest%\delay.vbs
 choice /c yn /n >nul
 cls
@@ -146,14 +141,14 @@ echo Press any key to continue.
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
 pause>nul
 cls
-::::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 
 (
 echo Remember to have fun!
 echo Press any key to continue.
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
 pause>nul
-::::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 cls
 (
 echo Okay, "%playername%", now is the part you may or may not have waited for.
@@ -163,7 +158,7 @@ echo _._._._.y/n._._._._
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
 choice /c yn /n >nul
 cls
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 if %errorlevel%==1 (
 cls
 goto choosestarter
@@ -187,7 +182,7 @@ echo 2.  Squirtle
 echo 3. Bulbasaur
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
 choice /c 1234 /n >nul
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 
 if %errorlevel%==1 (
 cls
@@ -218,7 +213,7 @@ echo Choose the LIGHTNING pokemon, Pikachu?
 echo _._._._.y/n._._._._
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x24 -a c
 choice /c yn /n >nul
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 if %errorlevel%==1 (
 cls
 set starter=PIKACHU
@@ -257,7 +252,7 @@ echo Choose the fire pokemon, Charmander?
 echo _._._._.y/n._._._._
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x24 -a c
 choice /c yn /n >nul
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 if %errorlevel%==1 (
 cls
 set starter=Charmander
@@ -296,7 +291,7 @@ echo Choose the water pokemon, Squirtle?
 echo _._._._.y/n._._._._
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x24 -a c
 choice /c yn /n >nul
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 if %errorlevel%==1 (
 cls
 set starter=Squirtle
@@ -335,7 +330,7 @@ echo Choose the grass pokemon, Bulbasaur?
 echo _._._._.y/n._._._._
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x24 -a c
 choice /c yn /n >nul
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 if %errorlevel%==1 (
 cls
 set starter=Bulbasaur
@@ -372,7 +367,7 @@ echo Would you like to name your new %starter%?
 echo _._._._.y/n._._._._
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
 choice /c yn /n >nul
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 
 if %errorlevel%==1 (
 cls
@@ -401,7 +396,7 @@ echo _._._._.y/n._._._._
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
 choice /c yn /n >nul
 
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 if %errorlevel%==2 (
 cls
 goto namestarter2
@@ -415,7 +410,7 @@ echo time before setting on an adventure. What will "%playername%" do?
 echo 1.Visit home       2.Start on route 1
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
 choice /c 12 /n >nul
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 if %errorlevel%==1 (
 cls
 goto home
@@ -445,7 +440,7 @@ echo %playername% notices some rustling tall grass. What will %playername% do?
 echo 1.Investigate the tall grass	2.Go to Pallet Forest
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
 choice /c 12 /n >nul
-::start /min %pdest%\pokemonsounds\select.vbs
+start /min %pdest%\pokemonsounds\select.vbs
 if %errorlevel%==1 (
 cls
 goto route1ratata
@@ -514,7 +509,7 @@ cls
 set eminus=0
 set sminus=0
 tskill wscript
-::start /min %pdest%\pokemonsounds\battle.vbs
+start /min %pdest%\pokemonsounds\battle.vbs
 color 07
 mode con:cols=109 lines=30
 :battle
@@ -582,13 +577,13 @@ set starterattack=%errorlevel%
 
 set /a atsound=%random%%%3
 if %atsound%==0 (
-::start /min %pdest%\pokemonsounds\att1.vbs
+start /min %pdest%\pokemonsounds\att1.vbs
 )
 if %atsound%==1 (
-::start /min %pdest%\pokemonsounds\att2.vbs
+start /min %pdest%\pokemonsounds\att2.vbs
 )
 if %atsound%==2 (
-::start /min %pdest%\pokemonsounds\att3.vbs
+start /min %pdest%\pokemonsounds\att3.vbs
 )
 set /a effective=%random%%%75
 if %effective% LEQ 75 set emultiplier=1&set string=It's not very effective{1x damage}...
@@ -760,7 +755,6 @@ Echo You Lose!
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x29 -a c
 pause>nul
 exit
-
 
 
 
