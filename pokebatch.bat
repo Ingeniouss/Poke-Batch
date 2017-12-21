@@ -513,6 +513,8 @@ start /min %pdest%\pokemonsounds\battle.vbs
 color 07
 mode con:cols=109 lines=30
 :battle
+if %starterhp% LEQ 0 goto lose
+if %enemyhp% LEQ 0 goto :win
 
 set /a epercent=%enemyhp%*100/%enemymaxhp%
 set /a spercent=%starterhp%*100/%startermaxhp%
@@ -529,10 +531,8 @@ if %spercent% LEQ 35 set shpcolor=cc
 set /a epercent=%enemyhp%*100/%enemymaxhp%
 set /a spercent=%starterhp%*100/%startermaxhp%
 
-if %starterhp% LEQ 0 goto lose
-if %enemyhp% LEQ 0 goto :win
 cls
-echo %enemyname%: %enemyhp%/%enemymaxhp%                                        %Startername%: %starterhp%/%startermaxhp%|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x3 -a vc
+echo %enemyname%: %enemyhp%/%enemymaxhp%                                        %Startername%: %starterhp%/%startermaxhp% {-%damage%} |%pdest%\boxes-1.2\boxes.exe -d stone -s 108x3 -a c
 
 ::echo ^|-----------------------------------------------------^|--------------------------------------------------------------- 
 
@@ -591,6 +591,24 @@ if %effective% LEQ 37 set emultiplier=2&set string=It's very effective{2x damage
 if %effective% LEQ 10 set emultiplier=3&set string=It's extremely effective{3x damage}!..
 
 
+if %starterattack%==1 (
+set /a damage=2*%emultiplier%
+set /a enemyhp-=2*%emultiplier%
+)
+if %starterattack%==2 (
+set /a damage=6*%emultiplier%
+set /a enemyhp-=6*%emultiplier%
+)
+if %starterattack%==3 (
+set /a damage=4*%emultiplier%
+set /a enemyhp-=4*%emultiplier%
+)
+if %starterattack%==4 (
+set /a damage=4*%emultiplier%
+set /a enemyhp-=4*%emultiplier%
+)
+if %starterhp% LEQ 0 goto lose
+if %enemyhp% LEQ 0 goto :win
 if %starterattack%==1 (echo %startername% used %attack[0]%!
 echo %string% )|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x20 -a c
 if %starterattack%==2 (echo %startername% used %attack[1]%!
@@ -600,18 +618,6 @@ echo %string% )|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x20 -a c
 
 ping localhost -n 4 >nul
 
-if %starterattack%==1 (
-set /a enemyhp-=2*%emultiplier%
-)
-if %starterattack%==2 (
-set /a enemyhp-=6*%emultiplier%
-)
-if %starterattack%==3 (
-set /a enemyhp-=4*%emultiplier%
-)
-if %starterattack%==4 (
-set /a enemyhp-=4*%emultiplier%
-)
 set /a epercent=%enemyhp%*100/%enemymaxhp%
 set /a spercent=%starterhp%*100/%startermaxhp%
 ::enemy
@@ -631,7 +637,7 @@ set /a epercent=%enemyhp%*100/%enemymaxhp%
 set /a spercent=%starterhp%*100/%startermaxhp%
 
 
-echo %enemyname%: %enemyhp%/%enemymaxhp%                                        %Startername%: %starterhp%/%startermaxhp%|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x3 -a vc
+echo %enemyname%: %enemyhp%/%enemymaxhp% {-%damage%}                                       %Startername%: %starterhp%/%startermaxhp%|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x3 -a c
 
 
 cd %pdest%\files\
@@ -668,24 +674,29 @@ if %effective% LEQ 10 set emultiplier=3&set string=It's extremely effective{3x d
 
 set /a enemyattacknum=%random%%%4
 if %enemyattacknum%==0 (
+set /a damage=2*%emultiplier%
 set enemyattack=Scratch
 set /a starterhp-=2*%emultiplier%
 )
 if %enemyattacknum%==1 (
+set /a damage=4*%emultiplier%
 set enemyattack=%enemyattack1%
-set /a starterhp-=6*%emultiplier%
+set /a starterhp-=4*%emultiplier%
 )
 if %enemyattacknum%==2 (
+set /a damage=4*%emultiplier%
 set enemyattack=%enemyattack2%
 set /a starterhp-=4*%emultiplier%
 )
 if %enemyattacknum%==3 (
+set /a damage=3*%emultiplier%
 set enemyattack=%enemyattack3%
-set /a starterhp-=5*%emultiplier%
+set /a starterhp-=3*%emultiplier%
 )
-
+if %starterhp% LEQ 0 goto lose
+if %enemyhp% LEQ 0 goto :win
 (
-echo %enemyname% used '%enemyattack%'
+echo %enemyname% used '%enemyattack%'!
 echo %string%
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x20 -a c
 ping localhost -n 4 >nul
