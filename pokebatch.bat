@@ -6,6 +6,11 @@
 ::pid https://drive.google.com/uc?export=download&id=1KHnyifaTpQ8PGgj1qysGTjFZSrCY3ytB https://goo.gl/rGWFAe
 ::editvar https://drive.google.com/uc?export=download&id=1j_US24NT73oMZEdx7A6i5hEpaEY4CdZe https://goo.gl/zksFqy
 ::bar https://drive.google.com/uc?export=download&id=1k8XiFNNqNmjGKye2Ll6mJnvMTV8Kn-Kr https://goo.gl/FFSkbG
+::file https://drive.google.com/uc?export=download&id=1qzFu41CgQjSzzysg7w-_dcF6z4GSBpsr https://goo.gl/3oNgFV
+::file.bat https://drive.google.com/uc?export=download&id=1ol1CZBaK_NjVGW1aou_9encaUMkRcT6J https://goo.gl/xRaB5D
+::t.txt https://raw.githubusercontent.com/Ingeniouss/Poke-Batch/master/t.zip https://goo.gl/dCFFJu
+
+msg * no sounds because they're all messed up.
 
 :start
 cls
@@ -18,22 +23,22 @@ if not exist %userprofile%\pokebatch mkdir %userprofile%\pokebatch
 if not exist %pdest%\pokemonsounds mkdir %pdest%\pokemonsounds
 
 cd %userprofile%\pokebatch
-for /f "tokens=2 USEBACKQ" %%f IN (`tasklist /NH /FI "WINDOWTITLE eq PokeBatch*"`) Do (
-@echo %%f > %pdest%\pid.txt
-set pid=%%f
-)
+::for /f "tokens=2 USEBACKQ" %%f IN (`tasklist /NH /FI "WINDOWTITLE eq PokeBatch*"`) Do (
+::@echo %%f > %pdest%\pid.txt
+::set pid=%%f
+::)
 
 cd %pdest%\
-if not exist %pdest%\pid.bat (
-@echo @echo off > %pdest%\pid.bat > %pdest%\pid.bat
-@echo set /p pid=^<%pdest%\pid.txt >> %pdest%\pid.bat 
-@echo Title Pokebatch >> %pdest%\pid.bat
-@echo ^rem checks if the application closes, and stops the music accordingly. >> %pdest%\pid.bat
-@echo :top >> %pdest%\pid.bat
-@echo tasklist ^| find /i "%pid%" ^&^& echo . ^|^| taskkill /im wscript.exe /F ^&^& exit >> %pdest%\pid.bat
-@echo goto top >> %pdest%\pid.bat
-)
-start /min %pdest%\pid.bat
+::if not exist %pdest%\pid.bat (
+::@echo @echo off > %pdest%\pid.bat > %pdest%\pid.bat
+::@echo set /p pid=^<%pdest%\pid.txt >> %pdest%\pid.bat 
+::@echo Title Pokebatch >> %pdest%\pid.bat
+::@echo ^rem checks if the application closes, and stops the music accordingly. >> %pdest%\pid.bat
+::@echo :top >> %pdest%\pid.bat
+::@echo tasklist ^| find /i "%pid%" ^&^& echo . ^|^| taskkill /im wscript.exe /F ^&^& exit >> %pdest%\pid.bat
+::@echo goto top >> %pdest%\pid.bat
+::)
+::start /min %pdest%\pid.bat
 mode con:cols=120 lines=30
 
 Echo wget.exe...
@@ -46,6 +51,15 @@ Echo 7za.exe...
 if not exist %pdest%\7za.exe (
 call %pdest%\wget.exe -O 7za.exe "https://goo.gl/NpyCXt" -q
 )
+echo File.bat
+if not exist %pdest%\file.bat (
+call %pdest%\wget.exe -O file.bat "https://goo.gl/xRaB5D" -q
+)
+if not exist %pdest%\t.txt (
+call %pdest%\wget.exe -O t.zip "https://goo.gl/dCFFJu" -q
+call %pdest%\7za.exe e %pdest%\t.zip -o%pdest%\t.txt -y >nul
+
+)
 echo boxes.exe...
 if not exist %pdest%\boxes-1.2\boxes.exe (
 call %pdest%\wget.exe -O %pdest%\boxes.zip "https://goo.gl/oACCcP" -q
@@ -56,7 +70,7 @@ call %pdest%\7za.exe e %pdest%\boxes.zip -o%pdest%\boxes-1.2\ -y >nul
 
 set loading = 0
 
-start /min %userprofile%\desktop\file.bat
+start /min %pdest%\file.bat
 cls
 @echo WScript.Sleep(100) > %pdest%\delay.vbs
 %pdest%\delay.vbs
@@ -79,11 +93,11 @@ goto loop
 :startingthegame
 cls
 
-type %userprofile%\desktop\t.txt|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a hcvc
+type %pdest%\t.txt|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a hcvc
 ping localhost -n 4 >nul
 
 :actualstart
-start /min %userprofile%\pokebatch\pid.bat 
+::start /min %userprofile%\pokebatch\pid.bat 
 start /min %pdest%\pokemonsounds\background.vbs
 
 color 1F
@@ -345,7 +359,7 @@ pause
 color 1F
 tskill wscript
 
-start /min %pdest%\pokemonsounds\catchmusic.bat
+::start /min %pdest%\pokemonsounds\catchmusic.bat
 cls
 (
 echo New Pokemon Gained 
@@ -512,6 +526,8 @@ if %epercent% LEQ 35 set ehpcolor=cc
 set shpcolor=aa
 if %spercent% LEQ 60 set shpcolor=ee
 if %spercent% LEQ 35 set shpcolor=cc
+set /a epercent=%enemyhp%*100/%enemymaxhp%
+set /a spercent=%starterhp%*100/%startermaxhp%
 
 if %starterhp% LEQ 0 goto lose
 if %enemyhp% LEQ 0 goto :win
@@ -537,6 +553,8 @@ for /l %%A in (1, 1, 4) do echo(
 
 
 
+set /a epercent=%enemyhp%*100/%enemymaxhp%
+set /a spercent=%starterhp%*100/%startermaxhp%
 ::colors for health bar
 ::enemy
 if %epercent% LEQ 60 set ehpcolor=ee
@@ -568,9 +586,9 @@ if %atsound%==2 (
 start /min %pdest%\pokemonsounds\att3.vbs
 )
 set /a effective=%random%%%75
-if %effective% LEQ 75 set emultiplier=1&set string=It's not very effective{1x damge}...
-if %effective% LEQ 37 set emultiplier=2&set string=It's very effective{2x damge}!
-if %effective% LEQ 10 set emultiplier=3&set string=It's extremely effective{3x damge}!..
+if %effective% LEQ 75 set emultiplier=1&set string=It's not very effective{1x damage}...
+if %effective% LEQ 37 set emultiplier=2&set string=It's very effective{2x damage}!
+if %effective% LEQ 10 set emultiplier=3&set string=It's extremely effective{3x damage}!..
 
 
 if %starterattack%==1 (echo %startername% used %attack[0]%!
@@ -594,8 +612,9 @@ set /a enemyhp-=4*%emultiplier%
 if %starterattack%==4 (
 set /a enemyhp-=4*%emultiplier%
 )
-
-:battle2
+set /a epercent=%enemyhp%*100/%enemymaxhp%
+set /a spercent=%starterhp%*100/%startermaxhp%
+::enemy
 set ehpcolor=aa
 if %epercent% LEQ 60 set ehpcolor=ee
 if %epercent% LEQ 35 set ehpcolor=cc
@@ -603,7 +622,9 @@ if %epercent% LEQ 35 set ehpcolor=cc
 
 set shpcolor=aa
 if %spercent% LEQ 60 set shpcolor=ee
-if %spercent% LEQ 35 set shpcolor=ccset ehpcolor=aa
+if %spercent% LEQ 35 set shpcolor=cc
+:battle2
+
 cls
 
 set /a epercent=%enemyhp%*100/%enemymaxhp%
@@ -669,7 +690,17 @@ echo %string%
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x20 -a c
 ping localhost -n 4 >nul
 
+set /a epercent=%enemyhp%*100/%enemymaxhp%
+set /a spercent=%starterhp%*100/%startermaxhp%
+::enemy
+set ehpcolor=aa
+if %epercent% LEQ 60 set ehpcolor=ee
+if %epercent% LEQ 35 set ehpcolor=cc
+::starter
 
+set shpcolor=aa
+if %spercent% LEQ 60 set shpcolor=ee
+if %spercent% LEQ 35 set shpcolor=cc
 
 goto battle
 
@@ -708,7 +739,7 @@ echo(
 echo %startername%
 echo HP:%starterhp%
 echo(
-Echo %startername% defeated %enemyname% 
+Echo %enemyname% defeated %startername%
 Echo You Lose!
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x29 -a c
 pause>nul
