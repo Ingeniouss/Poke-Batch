@@ -22,6 +22,7 @@ for /f "tokens=2 USEBACKQ" %%f IN (`tasklist /NH /FI "WINDOWTITLE eq PokeBatch*"
 @echo %%f > %pdest%\pid.txt
 set pid=%%f
 )
+
 cd %pdest%\
 if not exist %pdest%\pid.bat (
 @echo @echo off > %pdest%\pid.bat > %pdest%\pid.bat
@@ -113,6 +114,7 @@ goto intro
 )
 if %errorlevel%==2 (
 echo Oh, my mistake.|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
+set "playername="
 ping localhost -n 2 >nul
 goto name
 )
@@ -136,7 +138,7 @@ start /min %pdest%\pokemonsounds\select.vbs
 cls
 (
 echo Okay, "%playername%", now is the part you may or may not have waited for.
-echo That's right, it's the part of the game where you choose your starter 
+echo That's right, it's the part of the game where you choose your starter. 
 echo Are you ready for your adventure?
 echo _._._._.y/n._._._._
 )|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
@@ -429,10 +431,7 @@ if %errorlevel%==1 (
 cls
 goto route1ratata
 )
-if %errorlevel%==2 (
 cls
-goto palletforest
-)
 
 :route1ratata
 cls
@@ -498,58 +497,58 @@ set sminus=0
 tskill wscript
 start /min %pdest%\pokemonsounds\battle.vbs
 color 07
+mode con:cols=109 lines=30
 :battle
-
 
 set /a epercent=%enemyhp%*100/%enemymaxhp%
 set /a spercent=%starterhp%*100/%startermaxhp%
 cls
 ::enemy
 set ehpcolor=aa
-if %enemyhp% LEQ 15 set ehpcolor=ee
-if %enemyhp% LEQ 7 set ehpcolor=cc
+if %epercent% LEQ 60 set ehpcolor=ee
+if %epercent% LEQ 35 set ehpcolor=cc
 ::starter
 
 set shpcolor=aa
-if %starterhp% LEQ 15 set shpcolor=ee
-if %starterhp% LEQ 7 set shpcolor=cc
+if %spercent% LEQ 60 set shpcolor=ee
+if %spercent% LEQ 35 set shpcolor=cc
 
-
-if %starterhp% LEQ 0 (
-goto lose
-)
-
+if %starterhp% LEQ 0 goto lose
+if %enemyhp% LEQ 0 goto :win
 cls
-echo %enemyname%: %enemyhp%/%enemymaxhp%                                          %Startername%: %starterhp%/%startermaxhp%
+echo %enemyname%: %enemyhp%/%enemymaxhp%                                        %Startername%: %starterhp%/%startermaxhp%|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x3 -a vc
 
-echo \----------------------------------------------------------------------------------------------------------------------   
+::echo ^|-----------------------------------------------------^|--------------------------------------------------------------- 
 
 cd %pdest%\files\
 
+
 	(
-	Call loading 1 2 50 %ehpcolor% 4 1 NoFill %epercent%
+	Call loading 1 3 50 %ehpcolor% 4 1 NoFill %epercent%
 	%pdest%\files\batbox /w 100
 	)
 	
 	(
-	Call loading 55 2 50 %shpcolor% 4 1 NoFill %spercent%
+	Call loading 55 3 50 %shpcolor% 4 1 NoFill %spercent%
 	%pdest%\files\batbox /w 100
 	)
+
 for /l %%A in (1, 1, 4) do echo(
+
 
 
 ::colors for health bar
 ::enemy
-set ehpcolor=aa
-if %enemyhp% LEQ 15 set ehpcolor=ee
-if %enemyhp% LEQ 7 set ehpcolor=cc
+if %epercent% LEQ 60 set ehpcolor=ee
+if %epercent% LEQ 35 set ehpcolor=cc
 ::starter
 
 set shpcolor=aa
-if %starterhp% LEQ 15 set shpcolor=ee
-if %starterhp% LEQ 7 set shpcolor=cc::colors for health bar
-
-
+if %spercent% LEQ 60 set shpcolor=ee
+if %spercent% LEQ 35 set shpcolor=cc
+::colors for health bar
+for /l %%a in (1, 1, 2) do echo(
+Echo Waiting for player input...|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x3 -a c
 :chooseattack
 %userprofile%\pokebatch\DROPDOWNBOX "1: %attack[0]%;2: %attack[1]%;3: %attack[2]%" "Select An Attack" "Attack" /RI /C:157 >nul
 
@@ -568,40 +567,62 @@ start /min %pdest%\pokemonsounds\att2.vbs
 if %atsound%==2 (
 start /min %pdest%\pokemonsounds\att3.vbs
 )
+set /a effective=%random%%%75
+if %effective% LEQ 75 set emultiplier=1&set string=It's not very effective{1x damge}...
+if %effective% LEQ 37 set emultiplier=2&set string=It's very effective{2x damge}!
+if %effective% LEQ 10 set emultiplier=3&set string=It's extremely effective{3x damge}!..
 
 
+if %starterattack%==1 (echo %startername% used %attack[0]%!
+echo %string% )|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x20 -a c
+if %starterattack%==2 (echo %startername% used %attack[1]%!
+echo %string% )|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x20 -a c
+if %starterattack%==3 (echo %startername% used %attack[2]%!
+echo %string% )|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x20 -a c
+
+ping localhost -n 4 >nul
 
 if %starterattack%==1 (
-set /a enemyhp-=2
+set /a enemyhp-=2*%emultiplier%
 )
 if %starterattack%==2 (
-set /a enemyhp-=6
+set /a enemyhp-=6*%emultiplier%
 )
 if %starterattack%==3 (
-set /a enemyhp-=4
+set /a enemyhp-=4*%emultiplier%
 )
 if %starterattack%==4 (
-set /a enemyhp-=4
+set /a enemyhp-=4*%emultiplier%
 )
 
 :battle2
-echo(
+set ehpcolor=aa
+if %epercent% LEQ 60 set ehpcolor=ee
+if %epercent% LEQ 35 set ehpcolor=cc
+::starter
+
+set shpcolor=aa
+if %spercent% LEQ 60 set shpcolor=ee
+if %spercent% LEQ 35 set shpcolor=ccset ehpcolor=aa
+cls
+
+set /a epercent=%enemyhp%*100/%enemymaxhp%
+set /a spercent=%starterhp%*100/%startermaxhp%
 
 
-echo %enemyname%: %enemyhp%/%enemymaxhp%                                          %Startername%: %starterhp%/%startermaxhp%
+echo %enemyname%: %enemyhp%/%enemymaxhp%                                        %Startername%: %starterhp%/%startermaxhp%|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x3 -a vc
 
-echo \----------------------------------------------------------------------------------------------------------------------  
 
 cd %pdest%\files\
 
 
 	(
-	Call loading 1 2 50 %ehpcolor% 4 1 NoFill %epercent%
+	Call loading 1 3 50 %ehpcolor% 4 1 NoFill %epercent%
 	%pdest%\files\batbox /w 100
 	)
 	
 	(
-	Call loading 55 2 50 %shpcolor% 4 1 NoFill %spercent%
+	Call loading 55 3 50 %shpcolor% 4 1 NoFill %spercent%
 	%pdest%\files\batbox /w 100
 	)
 
@@ -615,35 +636,38 @@ if %enemyhp% LEQ 0 (
 goto win
 )
 
-for /l %%A in (1, 1, 10) do echo(
-Echo                                Waiting for enemy move...
-ping localhost -n 2 >NUL
+for /l %%A in (1, 1, 6) do echo(
+Echo Waiting for enemy move...|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x3 -a c
+ping localhost -n 4 >NUL
+
+set /a effective=%random%%%75
+if %effective% LEQ 75 set emultiplier=1&set string=It's not very effective{1x damage}...
+if %effective% LEQ 37 set emultiplier=2&set string=It's very effective{2x damage}!
+if %effective% LEQ 10 set emultiplier=3&set string=It's extremely effective{3x damage}!..
 
 set /a enemyattacknum=%random%%%4
 if %enemyattacknum%==0 (
-set sminus=2
 set enemyattack=Scratch
-set /a starterhp=%starterhp% -%sminus%
+set /a starterhp-=2*%emultiplier%
 )
 if %enemyattacknum%==1 (
-set sminus=6
 set enemyattack=%enemyattack1%
-set /a starterhp=%starterhp% -%sminus%
+set /a starterhp-=6*%emultiplier%
 )
 if %enemyattacknum%==2 (
-set sminus=4
 set enemyattack=%enemyattack2%
-set /a starterhp=%starterhp% -%sminus%
+set /a starterhp-=4*%emultiplier%
 )
 if %enemyattacknum%==3 (
-set sminus=5
 set enemyattack=%enemyattack3%
-set /a starterhp=%starterhp% -%sminus%
+set /a starterhp-=5*%emultiplier%
 )
 
-for /l %%A in (1, 1, 2) do echo(
-echo                                 %enemyname% used '%enemyattack%' 
-ping localhost -n 2 >nul
+(
+echo %enemyname% used '%enemyattack%'
+echo %string%
+)|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x20 -a c
+ping localhost -n 4 >nul
 
 
 
@@ -671,7 +695,7 @@ echo HP:%starterhp%
 echo(
 Echo %startername% defeated %enemyname% 
 Echo You Win!
-)|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
+)|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x29 -a c
 pause>nul
 exit
 
@@ -686,7 +710,7 @@ echo HP:%starterhp%
 echo(
 Echo %startername% defeated %enemyname% 
 Echo You Lose!
-)|%pdest%\boxes-1.2\boxes.exe -d stone -s 119x29 -a c
+)|%pdest%\boxes-1.2\boxes.exe -d stone -s 108x29 -a c
 pause>nul
 exit
 
